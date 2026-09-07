@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quatro Bairros de São Paulo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#f2efe8;
+    --ink-dim:#c8c3b8;
+    --base:#1c1b18;
+    --base-raise:#242220;
+    --line: rgba(242,239,232,0.14);
+
+    --se:#b08d57;
+    --se-soft: rgba(176,141,87,0.14);
+    --liberdade:#c23b3b;
+    --liberdade-soft: rgba(194,59,59,0.14);
+    --vilasonia:#5c8266;
+    --vilasonia-soft: rgba(92,130,102,0.16);
+    --mooca:#c99a2e;
+    --mooca-soft: rgba(201,154,46,0.16);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--base);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-weight:400;
+    line-height:1.55;
+  }
+  h1,h2,h3, .display{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+
+  /* ---------- Intro ---------- */
+  header.intro{
+    padding: 6.5rem 1.5rem 4.5rem;
+    max-width:760px;
+    margin:0 auto;
+    text-align:left;
+  }
+  header.intro .kicker{
+    font-size:0.95rem;
+    color:var(--ink-dim);
+    margin-bottom:1.1rem;
+  }
+  header.intro h1{
+    font-size:clamp(2.4rem, 6vw, 4.1rem);
+    line-height:1.05;
+  }
+  header.intro p{
+    max-width:52ch;
+    color:var(--ink-dim);
+    font-size:1.05rem;
+    margin-top:1.4rem;
+  }
+
+  /* ---------- Nav de bairros ---------- */
+  nav.map{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:rgba(28,27,24,0.9);
+    backdrop-filter: blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.map ul{
+    list-style:none;
+    display:flex;
+    max-width:960px;
+    margin:0 auto;
+    padding:0 1.5rem;
+    overflow-x:auto;
+  }
+  nav.map a{
+    display:block;
+    padding:1rem 1.1rem;
+    color:var(--ink-dim);
+    text-decoration:none;
+    font-size:0.92rem;
+    white-space:nowrap;
+    border-bottom:2px solid transparent;
+    transition: color .2s ease, border-color .2s ease;
+  }
+  nav.map a:hover{ color:var(--ink); }
+  nav.map li:nth-child(1) a:hover, nav.map li:nth-child(1) a:focus-visible{border-color:var(--se); color:var(--ink);}
+  nav.map li:nth-child(2) a:hover, nav.map li:nth-child(2) a:focus-visible{border-color:var(--liberdade); color:var(--ink);}
+  nav.map li:nth-child(3) a:hover, nav.map li:nth-child(3) a:focus-visible{border-color:var(--vilasonia); color:var(--ink);}
+  nav.map li:nth-child(4) a:hover, nav.map li:nth-child(4) a:focus-visible{border-color:var(--mooca); color:var(--ink);}
+
+  /* ---------- Seção de bairro ---------- */
+  section.bairro{
+    position:relative;
+    max-width:960px;
+    margin:0 auto;
+    padding: 4.5rem 1.5rem 3.5rem;
+    border-bottom:1px solid var(--line);
+  }
+  section.bairro:last-of-type{ border-bottom:none; }
+
+  .bairro-head{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:baseline;
+    gap:0.9rem 1.2rem;
+    margin-bottom:2.6rem;
+  }
+  .bairro-head .accent-dot{
+    width:11px; height:11px;
+    border-radius:50%;
+    flex:none;
+  }
+  .bairro-head h2{
+    font-size:clamp(2rem, 4.6vw, 3rem);
+  }
+  .bairro-head .subprefeitura{
+    color:var(--ink-dim);
+    font-size:0.95rem;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 2.5rem;
+  }
+  @media (max-width: 680px){
+    .grid{ grid-template-columns: 1fr; }
+  }
+
+  .block h3{
+    font-size:1.02rem;
+    font-family:'IBM Plex Sans', sans-serif;
+    font-weight:600;
+    margin-bottom:0.85rem;
+  }
+  .block p{
+    color:var(--ink-dim);
+    font-size:0.98rem;
+  }
+  .pop-number{
+    font-family:'Fraunces', serif;
+    font-size:2.6rem;
+    font-weight:500;
+    line-height:1;
+    margin-bottom:0.6rem;
+  }
+  .pop-note{
+    font-size:0.85rem;
+    color:var(--ink-dim);
+    opacity:0.85;
+    margin-top:0.9rem;
+  }
+
+  ul.places{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:grid;
+    gap:0.85rem;
+  }
+  ul.places li{
+    padding-left:1.1rem;
+    border-left:2px solid var(--line);
+    font-size:0.98rem;
+  }
+  ul.places li strong{
+    display:block;
+    color:var(--ink);
+    font-weight:600;
+    margin-bottom:0.15rem;
+  }
+  ul.places li span{
+    color:var(--ink-dim);
+    font-size:0.92rem;
+  }
+
+  /* accent per bairro */
+  #se .accent-dot{ background:var(--se); }
+  #se .pop-number{ color:var(--se); }
+  #se ul.places li{ border-left-color:var(--se); }
+  #se .card-bg{ background:var(--se-soft); }
+
+  #liberdade .accent-dot{ background:var(--liberdade); }
+  #liberdade .pop-number{ color:var(--liberdade); }
+  #liberdade ul.places li{ border-left-color:var(--liberdade); }
+
+  #vila-sonia .accent-dot{ background:var(--vilasonia); }
+  #vila-sonia .pop-number{ color:var(--vilasonia); }
+  #vila-sonia ul.places li{ border-left-color:var(--vilasonia); }
+
+  #mooca .accent-dot{ background:var(--mooca); }
+  #mooca .pop-number{ color:var(--mooca); }
+  #mooca ul.places li{ border-left-color:var(--mooca); }
+
+  footer{
+    max-width:960px;
+    margin:0 auto;
+    padding: 3rem 1.5rem 5rem;
+    color:var(--ink-dim);
+    font-size:0.85rem;
+  }
+  footer a{ color:var(--ink-dim); }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="intro">
+  <div class="kicker">São Paulo, bairro a bairro</div>
+  <h1>Quatro distritos, quatro cidades dentro da cidade</h1>
+  <p>Do centro histórico da Sé à Pequena Tóquio da Liberdade, passando pelo verde residencial de Vila Sônia e pela herança italiana da Mooca — um retrato rápido de população e lugares que definem cada região.</p>
+</header>
+
+<nav class="map" aria-label="Navegação entre bairros">
+  <ul>
+    <li><a href="#se">Sé</a></li>
+    <li><a href="#liberdade">Liberdade</a></li>
+    <li><a href="#vila-sonia">Vila Sônia</a></li>
+    <li><a href="#mooca">Mooca</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- SÉ -->
+  <section class="bairro" id="se">
+    <div class="bairro-head">
+      <span class="accent-dot"></span>
+      <h2>Sé</h2>
+      <span class="subprefeitura">Subprefeitura Sé · Centro</span>
+    </div>
+    <div class="grid">
+      <div class="block">
+        <h3>População</h3>
+        <div class="pop-number">~24 mil</div>
+        <p>Moradores residentes no distrito, um dos menos populosos da cidade — mas o fluxo diário de trabalhadores, comerciantes e visitantes chega a milhões de pessoas, já que a Sé é o marco zero e o principal polo administrativo e comercial de São Paulo.</p>
+        <p class="pop-note">Fonte: IBGE, Censo Demográfico. Número aproximado.</p>
+      </div>
+      <div class="block">
+        <h3>Lugares importantes</h3>
+        <ul class="places">
+          <li><strong>Catedral da Sé</strong><span>Uma das maiores catedrais neogóticas do mundo e símbolo religioso da cidade.</span></li>
+          <li><strong>Praça da Sé</strong><span>Marco zero de São Paulo e ponto de encontro histórico do centro.</span></li>
+          <li><strong>Pátio do Colégio</strong><span>Local de fundação da cidade em 1554, hoje museu e sítio histórico.</span></li>
+          <li><strong>Mercado Municipal (Mercadão)</strong><span>Templo gastronômico famoso pelo sanduíche de mortadela e pelos vitrais.</span></li>
+          <li><strong>Rua 25 de Março</strong><span>Maior polo de comércio popular da América Latina.</span></li>
+          <li><strong>Viaduto do Chá</strong><span>Uma das primeiras grandes obras viárias da cidade, ligando o Vale do Anhangabaú ao centro.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIBERDADE -->
+  <section class="bairro" id="liberdade">
+    <div class="bairro-head">
+      <span class="accent-dot"></span>
+      <h2>Liberdade</h2>
+      <span class="subprefeitura">Subprefeitura Sé · Centro</span>
+    </div>
+    <div class="grid">
+      <div class="block">
+        <h3>População</h3>
+        <div class="pop-number">66 mil</div>
+        <p>Habitantes segundo o Censo 2022 do IBGE, com densidade demográfica alta para os padrões centrais. O bairro é o coração da cultura oriental na cidade, com forte presença das comunidades japonesa, chinesa e coreana.</p>
+        <p class="pop-note">Fonte: IBGE, Censo Demográfico 2022.</p>
+      </div>
+      <div class="block">
+        <h3>Lugares importantes</h3>
+        <ul class="places">
+          <li><strong>Praça da Liberdade</strong><span>Centro simbólico do bairro, com lanternas vermelhas e arquitetura de inspiração japonesa.</span></li>
+          <li><strong>Feira da Liberdade</strong><span>Feira de fins de semana com comidas, artesanato e cultura asiática.</span></li>
+          <li><strong>Museu da Imigração Japonesa</strong><span>Conta a história da imigração japonesa no Brasil.</span></li>
+          <li><strong>Portais vermelhos (torii)</strong><span>Marcam a entrada do bairro nas principais esquinas.</span></li>
+          <li><strong>Rua Galvão Bueno</strong><span>Principal via comercial, cheia de restaurantes e mercados orientais.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- VILA SÔNIA -->
+  <section class="bairro" id="vila-sonia">
+    <div class="bairro-head">
+      <span class="accent-dot"></span>
+      <h2>Vila Sônia</h2>
+      <span class="subprefeitura">Subprefeitura Butantã · Zona Oeste</span>
+    </div>
+    <div class="grid">
+      <div class="block">
+        <h3>População</h3>
+        <div class="pop-number">~100 mil</div>
+        <p>Distrito majoritariamente residencial na zona oeste, que cresceu bastante nas últimas décadas com a expansão do metrô. Proximidade com Cidade Universitária (USP) atrai estudantes e famílias.</p>
+        <p class="pop-note">Fonte: estimativas IBGE/Seade por distrito. Número aproximado.</p>
+      </div>
+      <div class="block">
+        <h3>Lugares importantes</h3>
+        <ul class="places">
+          <li><strong>Estação Vila Sônia</strong><span>Terminal da Linha 4-Amarela do Metrô, importante integração de ônibus.</span></li>
+          <li><strong>Instituto Butantan</strong><span>Centro de pesquisa biomédica e museu, nas proximidades do bairro.</span></li>
+          <li><strong>Cidade Universitária (USP)</strong><span>Principal campus da Universidade de São Paulo, vizinho ao distrito.</span></li>
+          <li><strong>Terminal de ônibus Vila Sônia</strong><span>Um dos maiores terminais de integração da zona oeste.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOOCA -->
+  <section class="bairro" id="mooca">
+    <div class="bairro-head">
+      <span class="accent-dot"></span>
+      <h2>Mooca</h2>
+      <span class="subprefeitura">Subprefeitura Mooca · Zona Leste</span>
+    </div>
+    <div class="grid">
+      <div class="block">
+        <h3>População</h3>
+        <div class="pop-number">~65 mil</div>
+        <p>Bairro de forte herança italiana, formado por famílias operárias que prosperaram junto às antigas fábricas têxteis da região. Hoje é um distrito tradicional e residencial da zona leste.</p>
+        <p class="pop-note">Fonte: IBGE/Prefeitura de São Paulo. Número aproximado.</p>
+      </div>
+      <div class="block">
+        <h3>Lugares importantes</h3>
+        <ul class="places">
+          <li><strong>Parque da Mooca</strong><span>Principal área verde do bairro, ponto de lazer para moradores.</span></li>
+          <li><strong>Estádio da Rua Javari</strong><span>Casa do Clube Atlético Juventus, time histórico ligado à colônia italiana.</span></li>
+          <li><strong>Rua Bresser</strong><span>Uma das vias mais tradicionais, com comércio antigo e casarões.</span></li>
+          <li><strong>Festas italianas</strong><span>Celebrações religiosas e culturais que preservam a herança dos imigrantes italianos.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Dados populacionais são aproximações com base no Censo IBGE 2022 e estimativas oficiais por distrito; números exatos podem variar conforme a fonte e o ano de referência.
+</footer>
+
+</body>
+</html>
