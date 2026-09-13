@@ -120,6 +120,22 @@
     max-width: 1080px; margin: 0 auto;
     gap: 16px; flex-wrap: wrap;
   }
+  @media (max-width: 640px){
+    .topbar-inner{ padding: 12px 16px; gap: 10px; }
+    .brand{ font-size: 1rem; }
+    .brand span{ display: none; }
+    .nav-bairros{
+      order: 3;
+      width: 100%;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px;
+      scrollbar-width: thin;
+    }
+    .nav-bairros button{ flex-shrink: 0; }
+    .theme-toggle span:last-child{ display: none; }
+  }
   .brand{
     font-family: var(--font-display);
     font-weight: 600;
@@ -325,42 +341,85 @@
   .stat .num{ font-family: var(--font-display); font-size: 1.7rem; font-weight:600; color: var(--ink); }
   .stat .label{ font-size: 0.78rem; color: var(--ink-faint); max-width: 22ch; }
 
-  /* ---- Timeline ---- */
+  /* ---- Timeline (interactive accordion) ---- */
   .timeline-section{ padding: 50px 0; }
+  .timeline-hint{
+    color: var(--ink-faint);
+    font-size: 0.85rem;
+    font-style: italic;
+    margin-top: -8px;
+  }
   .timeline{
     position: relative;
-    margin-top: 30px;
-    padding-left: 34px;
+    margin-top: 24px;
+    padding-left: 30px;
     border-left: 2px solid var(--line);
   }
   .timeline-item{
     position: relative;
-    padding-bottom: 46px;
-    display:grid;
-    grid-template-columns: 1fr 190px;
-    gap: 24px;
-    align-items: start;
+    margin-bottom: 14px;
   }
-  .timeline-item:last-child{ padding-bottom: 4px; }
   .timeline-item::before{
     content:"";
     position:absolute;
-    left: -41px; top: 4px;
-    width: 14px; height:14px;
+    left: -37px; top: 18px;
+    width: 12px; height:12px;
     border-radius: 50%;
     background: var(--accent);
     border: 3px solid var(--bg);
     box-shadow: 0 0 0 2px var(--accent);
   }
-  .timeline-item .year{
+  .timeline-toggle{
+    width: 100%;
+    display:flex; align-items:center; justify-content: space-between;
+    gap: 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 14px 18px;
+    cursor: pointer;
+    text-align: left;
+    font-family: var(--font-body);
+    color: var(--ink);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+  .timeline-toggle:hover{ border-color: var(--accent); }
+  .timeline-item.open .timeline-toggle{
+    border-color: var(--accent);
+    box-shadow: var(--paper-shadow);
+  }
+  .timeline-toggle-head{ display:flex; align-items:baseline; gap: 12px; flex-wrap: wrap; }
+  .timeline-toggle .year{
     font-family: var(--font-display);
     font-weight: 700;
     color: var(--accent);
-    font-size: 1.05rem;
-    margin-bottom: 4px;
+    font-size: 0.98rem;
+    white-space: nowrap;
   }
-  .timeline-item h4{ font-size: 1.15rem; margin-bottom: 6px; }
-  .timeline-item p{ color: var(--ink-soft); font-size: 0.95rem; margin:0; }
+  .timeline-toggle h4{ font-size: 1.05rem; margin: 0; }
+  .timeline-caret{
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--accent);
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+  }
+  .timeline-item.open .timeline-caret{ transform: rotate(45deg); }
+
+  .timeline-body{
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+  }
+  .timeline-item.open .timeline-body{ max-height: 600px; }
+  .timeline-body-inner{
+    padding: 18px 18px 6px;
+    display:grid;
+    grid-template-columns: 1fr 180px;
+    gap: 20px;
+    align-items: start;
+  }
+  .timeline-body-inner p{ color: var(--ink-soft); font-size: 0.95rem; margin:0; }
 
   .photo-slot{
     position: relative;
@@ -371,9 +430,8 @@
     border-radius: 2px;
     box-shadow: var(--paper-shadow);
     overflow:hidden;
-    transform: rotate(var(--tilt, -1.2deg));
+    transform: rotate(-1deg);
   }
-  .timeline-item:nth-child(even) .photo-slot{ --tilt: 1.4deg; }
   .photo-slot img{
     position:absolute; inset:0;
     width:100%; height:100%;
@@ -399,9 +457,33 @@
   }
 
   @media (max-width: 720px){
-    .timeline-item{ grid-template-columns: 1fr; }
-    .photo-slot{ order: -1; max-width: 240px; }
+    .timeline{ padding-left: 22px; }
+    .timeline-item::before{ left: -29px; }
+    .timeline-toggle{ padding: 12px 14px; }
+    .timeline-toggle h4{ font-size: 0.98rem; }
+    .timeline-body-inner{ grid-template-columns: 1fr; }
+    .photo-slot{ order: -1; max-width: 220px; margin: 0 auto; }
+    .timeline-item.open .timeline-body{ max-height: 900px; }
   }
+
+  /* ---- Landmarks (pontos famosos) ---- */
+  .landmarks-section{ padding: 10px 0 20px; }
+  .landmarks-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .landmark-card{
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    border-radius: 2px;
+    padding: 16px 18px;
+    box-shadow: var(--paper-shadow);
+  }
+  .landmark-card h4{ font-size: 1rem; margin-bottom: 6px; }
+  .landmark-card p{ font-size: 0.88rem; color: var(--ink-soft); margin:0; }
 
   /* ---- Curiosidades (flip cards) ---- */
   .curiosidades-section{ padding: 20px 0 60px; }
@@ -522,6 +604,21 @@
     .cards{ grid-template-columns: 1fr; }
     .flip-grid{ grid-template-columns: 1fr; }
   }
+
+  @media (max-width: 640px){
+    body{ font-size: 16px; }
+    .wrap{ padding: 0 18px; }
+    .hero{ padding: 40px 0 28px; }
+    .hero h1{ max-width: none; }
+    .map-frame{ padding: 12px; }
+    .detail-header{ padding: 32px 0 22px; }
+    .stat-row{ gap: 22px; }
+    .stat .num{ font-size: 1.4rem; }
+    .bairro-card{ padding: 20px 20px 18px; }
+    .flip-card{ height: 210px; }
+    .compare-frame{ max-width: 100%; }
+    .foot-grid{ flex-direction: column; gap: 22px; }
+  }
 </style>
 </head>
 <body>
@@ -640,7 +737,16 @@ const bairros = [
     fundacao: "25 de janeiro de 1554",
     populacao: 23650,
     populacaoAno: "Censo 2010 — dado distrital mais recente disponível; a Sé é hoje um distrito majoritariamente comercial, com poucos moradores fixos",
+    idh: 0.858,
+    idhFonte: "Atlas do Desenvolvimento Humano (PNUD/Ipea/FJP), dado por subprefeitura",
     resumo: "Tudo começou aqui. No planalto entre os rios Tietê e Tamanduateí, jesuítas ergueram uma cabana de taipa e celebraram a missa que batizaria a cidade. Sete séculos depois, a Sé ainda é o marco zero — literalmente — de São Paulo.",
+    pontosFamosos: [
+      { nome: "Catedral Metropolitana da Sé", texto: "Um dos maiores templos neogóticos do mundo, construído entre 1913 e 1954. Abriga uma cripta com bispos e um cacique indígena." },
+      { nome: "Praça da Sé e Marco Zero", texto: "O monumento que define a quilometragem de todas as estradas que partem de São Paulo." },
+      { nome: "Pátio do Colégio", texto: "Local exato da fundação da cidade em 1554, hoje com museu, igreja e café." },
+      { nome: "Mercado Municipal (Mercadão)", texto: "Templo da gastronomia paulistana, famoso pelo sanduíche de mortadela e pelos vitrais coloridos." },
+      { nome: "Mosteiro de São Bento", texto: "Um dos redutos do canto gregoriano em São Paulo, com missas cantadas pelos monges beneditinos." }
+    ],
     timeline: [
       { ano: "1554", titulo: "Primeira missa e fundação", texto: "O padre Manuel da Nóbrega e um grupo de jesuítas, entre eles José de Anchieta, erguem uma cabana no Pátio do Colégio e celebram a primeira missa do povoado de São Paulo de Piratininga.", foto: "se-01-fundacao-1554.jpg" },
       { ano: "Séculos XVI–XVII", titulo: "Entreposto estratégico", texto: "Situada num planalto entre os rios Tietê e Tamanduateí, a pequena vila se torna ponto de passagem para viajantes rumo ao sertão, em meio a conflitos com povos tamoios e carijós.", foto: "se-02-entreposto.jpg" },
@@ -666,6 +772,8 @@ const bairros = [
     fundacao: "Ocupação intensa a partir de 1912",
     populacao: 66056,
     populacaoAno: "Censo 2022 (IBGE)",
+    idh: 0.870,
+    idhFonte: "Atlas do Desenvolvimento Humano (PNUD/Ipea/FJP); renda média mensal domiciliar per capita em torno de R$ 2.500",
     resumo: "Antes de virar sinônimo de cultura oriental, a região já carregava um nome pesado: Bairro da Pólvora, palco de execuções no período colonial. A chegada da imigração japonesa, a partir de 1908, reescreveu a paisagem — sem apagar essa história anterior.",
     timeline: [
       { ano: "Século XVIII", titulo: "O Bairro da Pólvora", texto: "A região é conhecida por sediar a Casa da Pólvora (1754) e o Largo da Forca, local de execuções de pessoas escravizadas fugitivas e condenados durante o período colonial.", foto: "liberdade-01-bairro-polvora.jpg" },
@@ -681,6 +789,13 @@ const bairros = [
       { titulo: "Uma memória reacendida", texto: "Em 2018, a descoberta de ossadas na região reacendeu o debate sobre a preservação da memória negra local, ligada ao antigo Largo da Forca." },
       { titulo: "Mais de 400 mil descendentes", texto: "Estima-se que mais de 400 mil japoneses e seus descendentes vivam hoje na cidade de São Paulo." }
     ],
+    pontosFamosos: [
+      { nome: "Museu Histórico da Imigração Japonesa", texto: "Reúne acervo sobre a chegada e a trajetória dos imigrantes japoneses no Brasil desde 1908." },
+      { nome: "Avenida Liberdade e suas lanternas", texto: "As lanternas vermelhas (chochin) e as fachadas em estilo oriental viraram o cartão-postal do bairro." },
+      { nome: "Viaduto Cidade de Osaka", texto: "Ponto clássico para fotos, decorado com postes em formato de lanterna japonesa." },
+      { nome: "Feira de artesanato da Praça da Liberdade", texto: "Aos fins de semana, reúne comida, artesanato e apresentações culturais orientais." },
+      { nome: "Jardim Oriental", texto: "Pequeno parque projetado no estilo japonês, com lago e pontes tradicionais." }
+    ],
     fotoAntesLabel: "liberdade-antes-seculo-xx.jpg",
     fotoDepoisLabel: "liberdade-depois-atual.jpg"
   },
@@ -692,6 +807,8 @@ const bairros = [
     fundacao: "28 de outubro de 1948",
     populacao: 123748,
     populacaoAno: "Censo 2022 (IBGE)",
+    idh: 0.895,
+    idhFonte: "Atlas do Desenvolvimento Humano (PNUD/Ipea/FJP), dado por subprefeitura",
     resumo: "É o mais jovem dos quatro bairros — e também o mais populoso. Onde hoje moram mais de 120 mil pessoas, até a década de 1940 havia apenas uma grande chácara coberta por mata de eucaliptos.",
     timeline: [
       { ano: "Até 1940", titulo: "Chácara e mata", texto: "A área é uma grande propriedade rural dos médicos Antonio Bueno e Joaquim Manuel da Fonseca, coberta por mata de eucaliptos.", foto: "vilasonia-01-chacara.jpg" },
@@ -707,6 +824,12 @@ const bairros = [
       { titulo: "Composta atrás das grades", texto: "Em 1961, um ex-detento do Carandiru compôs a valsa \"Luar de Vila Sônia\", que fez sucesso nas rádios na voz do cantor Tito Martines." },
       { titulo: "De mata a metrópole", texto: "Nas décadas de 1940, onde hoje vivem mais de 120 mil pessoas, existia apenas uma extensa mata de eucaliptos." }
     ],
+    pontosFamosos: [
+      { nome: "Estação Vila Sônia (Metrô Linha 4-Amarela)", texto: "Terminal da linha amarela, tornou-se o principal símbolo da modernização do bairro." },
+      { nome: "Shopping Butantã", texto: "Um dos polos de comércio e lazer mais movimentados da região oeste." },
+      { nome: "Avenida Professor Francisco Morato", texto: "Principal via de acesso do bairro, concentra comércio e serviços." },
+      { nome: "Rodovia Raposo Tavares", texto: "Liga o bairro ao interior do estado e marca a paisagem urbana da região." }
+    ],
     fotoAntesLabel: "vilasonia-antes-seculo-xx.jpg",
     fotoDepoisLabel: "vilasonia-depois-atual.jpg"
   },
@@ -718,6 +841,8 @@ const bairros = [
     fundacao: "1556",
     populacao: 80880,
     populacaoAno: "Censo 2022 (IBGE)",
+    idh: 0.909,
+    idhFonte: "Atlas do Desenvolvimento Humano (PNUD/Ipea/FJP); renda per capita descrita como superior à média municipal",
     resumo: "Fundada dois anos depois da própria cidade de São Paulo, a Moóca leva no nome a marca indígena que a batizou — e no sotaque, a marca da imigração italiana que a transformaria num símbolo operário e gastronômico.",
     timeline: [
       { ano: "1556", titulo: "Fundação e origem do nome", texto: "Dois anos após São Paulo, a Moóca nasce em terras habitadas por povos guaianases e tupiniquins. O nome vem do tupi \"moo\" (fazer) + \"oca\" (casa).", foto: "mooca-01-fundacao-1556.jpg" },
@@ -732,6 +857,13 @@ const bairros = [
       { titulo: "Um dialeto que resiste", texto: "Algumas famílias descendentes de italianos ainda falam o Talian, dialeto de origem vêneta trazido pelos imigrantes no fim do século XIX." },
       { titulo: "Berço do movimento operário", texto: "O bairro foi palco de uma das primeiras greves de trabalhadores da cidade de São Paulo, reflexo de sua vocação industrial." },
       { titulo: "A festa mais concorrida do bairro", texto: "A tradicional Festa de San Gennaro reúne comida, música e fé em uma das celebrações italianas mais concorridas da cidade." }
+    ],
+    pontosFamosos: [
+      { nome: "Paróquia de San Gennaro", texto: "Inaugurada em 1935, é o coração espiritual da comunidade italiana e palco da tradicional festa homônima." },
+      { nome: "Antiga Cervejaria Antarctica", texto: "Marco da fase industrial do bairro, hoje reconvertida para novos usos urbanos." },
+      { nome: "Cantinas tradicionais", texto: "Restaurantes centenários mantêm viva a herança gastronômica italiana da imigração." },
+      { nome: "Shopping Plaza Mooca", texto: "Um dos centros comerciais mais movimentados da zona leste." },
+      { nome: "Galpões industriais reconvertidos", texto: "Antigas fábricas viraram lofts, cervejarias artesanais e espaços culturais." }
     ],
     fotoAntesLabel: "mooca-antes-seculo-xx.jpg",
     fotoDepoisLabel: "mooca-depois-atual.jpg"
@@ -780,22 +912,36 @@ function renderDetail(b){
   const el = document.getElementById("detail");
   el.style.setProperty("--accent", `var(${b.accentVar})`);
 
-  const timelineHtml = b.timeline.map(item => `
-    <div class="timeline-item">
-      <div>
-        <div class="year">${item.ano}</div>
-        <h4>${item.titulo}</h4>
-        <p>${item.texto}</p>
-      </div>
-      <div class="photo-slot">
-        <img src="${IMG_BASE}${item.foto}" alt="Foto histórica: ${item.titulo} — ${b.nome}"
-             loading="lazy" onerror="this.style.display='none'">
-        <div class="placeholder">
-          <span class="icon">🖼️</span>
-          <span>Espaço para foto</span>
-          <small>${IMG_BASE}${item.foto}</small>
+  const timelineHtml = b.timeline.map((item, i) => `
+    <div class="timeline-item" id="tl-${b.id}-${i}">
+      <button class="timeline-toggle" onclick="toggleTimelineItem('${b.id}', ${i})" aria-expanded="${i === 0 ? 'true' : 'false'}">
+        <div class="timeline-toggle-head">
+          <span class="year">${item.ano}</span>
+          <h4>${item.titulo}</h4>
+        </div>
+        <span class="timeline-caret">＋</span>
+      </button>
+      <div class="timeline-body">
+        <div class="timeline-body-inner">
+          <p>${item.texto}</p>
+          <div class="photo-slot">
+            <img src="${IMG_BASE}${item.foto}" alt="Foto histórica: ${item.titulo} — ${b.nome}"
+                 loading="lazy" onerror="this.style.display='none'">
+            <div class="placeholder">
+              <span class="icon">🖼️</span>
+              <span>Espaço para foto</span>
+              <small>${IMG_BASE}${item.foto}</small>
+            </div>
+          </div>
         </div>
       </div>
+    </div>
+  `).join("");
+
+  const pontosFamososHtml = (b.pontosFamosos || []).map(p => `
+    <div class="landmark-card">
+      <h4>${p.nome}</h4>
+      <p>${p.texto}</p>
     </div>
   `).join("");
 
@@ -826,8 +972,8 @@ function renderDetail(b){
           <div class="label">habitantes — ${b.populacaoAno}</div>
         </div>
         <div class="stat">
-          <div class="num">${b.timeline.length}</div>
-          <div class="label">marcos históricos mapeados nesta linha do tempo</div>
+          <div class="num">${b.idh.toFixed(3).replace('.', ',')}</div>
+          <div class="label">IDH (renda, educação e longevidade) — ${b.idhFonte}</div>
         </div>
       </div>
     </div>
@@ -835,7 +981,14 @@ function renderDetail(b){
     <section class="timeline-section">
       <div class="section-label">Linha do tempo</div>
       <h2>Da fundação aos dias de hoje</h2>
+      <p class="timeline-hint">Toque em um marco para abrir os detalhes e a foto correspondente.</p>
       <div class="timeline">${timelineHtml}</div>
+    </section>
+
+    <section class="landmarks-section">
+      <div class="section-label">Onde ir</div>
+      <h2>Pontos famosos de ${b.nome}</h2>
+      <div class="landmarks-grid">${pontosFamososHtml}</div>
     </section>
 
     <section class="curiosidades-section">
@@ -867,11 +1020,23 @@ function renderDetail(b){
   initCompareSlider(b.id);
 }
 
+/* ---------- Interactive timeline (accordion) ---------- */
+function toggleTimelineItem(bairroId, index){
+  const item = document.getElementById(`tl-${bairroId}-${index}`);
+  if(!item) return;
+  const btn = item.querySelector(".timeline-toggle");
+  const isOpen = item.classList.contains("open");
+  item.classList.toggle("open", !isOpen);
+  btn.setAttribute("aria-expanded", String(!isOpen));
+}
+
 /* ---------- Navigation ---------- */
 function mostrarBairro(id){
   const b = bairros.find(x => x.id === id);
   if(!b) return;
   renderDetail(b);
+  const firstItem = document.getElementById(`tl-${id}-0`);
+  if(firstItem) firstItem.classList.add("open");
   document.getElementById("overview").classList.add("hidden");
   document.getElementById("detail").classList.add("visible");
   document.querySelectorAll(".nav-bairros button").forEach(btn => btn.classList.remove("active"));
