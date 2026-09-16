@@ -926,7 +926,7 @@ function renderDetail(b){
           <p>${item.texto}</p>
           <div class="photo-slot">
             <img src="${IMG_BASE}${item.foto}" alt="Foto histórica: ${item.titulo} — ${b.nome}"
-                 loading="lazy" onerror="this.style.display='none'">
+                 onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'">
             <div class="placeholder">
               <span class="icon">🖼️</span>
               <span>Espaço para foto</span>
@@ -1002,12 +1002,12 @@ function renderDetail(b){
       <h2>Antes e hoje</h2>
       <div class="compare-frame" id="compareFrame-${b.id}">
         <div class="compare-layer compare-before">
-          <img src="${IMG_BASE}${b.fotoAntesLabel}" alt="${b.nome} no passado" loading="lazy" onerror="this.style.display='none'">
+          <img src="${IMG_BASE}${b.fotoAntesLabel}" alt="${b.nome} no passado" loading="lazy" onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'">
           <div class="placeholder"><span class="icon">🖼️</span><span>Foto antiga</span><small>${IMG_BASE}${b.fotoAntesLabel}</small></div>
           <span class="badge">ANTES</span>
         </div>
         <div class="compare-layer compare-after">
-          <img src="${IMG_BASE}${b.fotoDepoisLabel}" alt="${b.nome} atualmente" loading="lazy" onerror="this.style.display='none'">
+          <img src="${IMG_BASE}${b.fotoDepoisLabel}" alt="${b.nome} atualmente" loading="lazy" onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'">
           <div class="placeholder"><span class="icon">🖼️</span><span>Foto atual</span><small>${IMG_BASE}${b.fotoDepoisLabel}</small></div>
           <span class="badge">HOJE</span>
         </div>
