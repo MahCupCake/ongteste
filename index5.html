@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>São Paulo em Quatro Bairros — Sé, Liberdade, Vila Sônia e Moóca</title>
+<link id="faviconLink" rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23E8DCC3' stroke='%239C8760' stroke-width='3'/%3E%3Ccircle cx='32' cy='17' r='7' fill='%23A0432B'/%3E%3Ccircle cx='47' cy='32' r='7' fill='%23B8752B'/%3E%3Ccircle cx='32' cy='47' r='7' fill='%235F6B3D'/%3E%3Ccircle cx='17' cy='32' r='7' fill='%237A3040'/%3E%3C/svg%3E">
+<meta name="description" content="Um passeio histórico e cultural por quatro bairros de São Paulo: Sé, Liberdade, Vila Sônia e Moóca.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Libre+Franklin:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ============================================
+     TOKENS
+     ============================================ */
+  :root{
+    --bg: #E8DCC3;
+    --bg-raised: #DECCA5;
+    --bg-card: #F1E6CC;
+    --ink: #2E2116;
+    --ink-soft: #5A4632;
+    --ink-faint: #8A7658;
+    --line: #B9A47D;
+    --line-strong: #9C8760;
+
+    --se: #A0432B;
+    --se-soft: #E4C4B2;
+    --liberdade: #B8752B;
+    --liberdade-soft: #EAD3AE;
+    --vilasonia: #5F6B3D;
+    --vilasonia-soft: #D7DAC0;
+    --mooca: #7A3040;
+    --mooca-soft: #E3C7CD;
+
+    --paper-shadow: 0 1px 0 rgba(46,33,22,0.06), 0 8px 20px -12px rgba(46,33,22,0.35);
+    --radius-doc: 3px;
+    --font-display: 'Fraunces', Georgia, serif;
+    --font-body: 'Libre Franklin', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  html[data-theme="dark"]{
+    --bg: #221810;
+    --bg-raised: #2C2016;
+    --bg-card: #2A1F16;
+    --ink: #EDE0C8;
+    --ink-soft: #C7B28C;
+    --ink-faint: #93805F;
+    --line: #4E3B26;
+    --line-strong: #6B5439;
+
+    --se: #D97A5C;
+    --se-soft: #4A2C22;
+    --liberdade: #E0A253;
+    --liberdade-soft: #493822;
+    --vilasonia: #9CAD70;
+    --vilasonia-soft: #333F27;
+    --mooca: #C97E8E;
+    --mooca-soft: #402530;
+
+    --paper-shadow: 0 1px 0 rgba(0,0,0,0.2), 0 10px 24px -12px rgba(0,0,0,0.6);
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    *{ animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.6;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  h1,h2,h3,h4{
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.15;
+    margin: 0 0 0.5em 0;
+    color: var(--ink);
+  }
+
+  p{ max-width: 62ch; }
+  a{ color: inherit; }
+
+  .wrap{
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  /* subtle paper texture */
+  body::before{
+    content:"";
+    position: fixed; inset:0;
+    pointer-events:none;
+    z-index: 0;
+    opacity: 0.5;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(46,33,22,0.025) 0, transparent 45%),
+      radial-gradient(circle at 80% 70%, rgba(46,33,22,0.03) 0, transparent 50%);
+  }
+
+  /* ============================================
+     TOP BAR
+     ============================================ */
+  .topbar{
+    position: sticky; top:0; z-index: 50;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+  .topbar-inner{
+    display:flex; align-items:center; justify-content: space-between;
+    padding: 14px 28px;
+    max-width: 1080px; margin: 0 auto;
+    gap: 16px; flex-wrap: wrap;
+  }
+  @media (max-width: 640px){
+    .topbar-inner{ padding: 12px 16px; gap: 10px; }
+    .brand{ font-size: 1rem; }
+    .brand span{ display: none; }
+    .nav-bairros{
+      order: 3;
+      width: 100%;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px;
+      scrollbar-width: thin;
+    }
+    .nav-bairros button{ flex-shrink: 0; }
+    .theme-toggle span:last-child{ display: none; }
+  }
+  .brand{
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.15rem;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    border:none; background:none; color: var(--ink);
+    padding: 0;
+  }
+  .brand span{ color: var(--ink-faint); font-weight: 400; font-style: italic; }
+
+  .nav-bairros{
+    display:flex; gap: 6px; flex-wrap: wrap;
+  }
+  .nav-bairros button{
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 600;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--ink-soft);
+    padding: 7px 13px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  }
+  .nav-bairros button:hover{ border-color: var(--line-strong); color: var(--ink); }
+  .nav-bairros button.active{
+    background: var(--accent, var(--ink));
+    color: var(--bg-card);
+    border-color: var(--accent, var(--ink));
+  }
+
+  .nav-pages{
+    display:flex; gap: 6px;
+    padding-left: 12px;
+    border-left: 1px solid var(--line);
+  }
+  .nav-pages button{
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 600;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--ink-soft);
+    padding: 7px 13px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  }
+  .nav-pages button:hover{ border-color: var(--line-strong); color: var(--ink); }
+  .nav-pages button.active{
+    background: var(--ink);
+    color: var(--bg-card);
+    border-color: var(--ink);
+  }
+  @media (max-width: 640px){
+    .nav-pages{ order: 4; border-left: none; padding-left: 0; width: 100%; justify-content: center; }
+  }
+
+  .theme-toggle{
+    display:flex; align-items:center; gap:8px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+  }
+  .theme-toggle:focus-visible, button:focus-visible, a:focus-visible{
+    outline: 2px solid var(--se);
+    outline-offset: 3px;
+  }
+
+  /* ============================================
+     HERO
+     ============================================ */
+  .org-logo-slot{
+    position: relative;
+    width: 130px; height: 76px;
+    margin-bottom: 18px;
+    border-radius: 2px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    box-shadow: var(--paper-shadow);
+  }
+  .org-logo-slot img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit: contain;
+    background: var(--bg-card);
+  }
+  .org-logo-slot .placeholder{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap: 2px; color: var(--ink-faint);
+    background: repeating-linear-gradient(45deg, var(--bg-raised), var(--bg-raised) 7px, var(--bg-card) 7px, var(--bg-card) 14px);
+  }
+  .org-logo-slot .placeholder .icon{ font-size: 1.1rem; }
+  .org-logo-slot .placeholder span{ font-size: 0.62rem; font-weight:600; }
+  .org-logo-slot .placeholder small{ font-size: 0.52rem; }
+
+  .hero{
+    padding: 64px 0 40px;
+    position: relative; z-index:1;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 48px;
+    align-items:center;
+  }
+  .hero h1{
+    font-size: clamp(2.1rem, 4vw, 3.1rem);
+    max-width: 12ch;
+  }
+  .hero .lede{
+    color: var(--ink-soft);
+    font-size: 1.08rem;
+    max-width: 46ch;
+  }
+  .hero .kicker{
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--ink-faint);
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+
+  .map-frame{
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-doc);
+    box-shadow: var(--paper-shadow);
+    padding: 18px;
+  }
+  .map-caption{
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    text-align:center;
+    margin-top: 10px;
+    font-style: italic;
+  }
+
+  .map-image-wrap{ position: relative; line-height: 0; border-radius: 2px; overflow: hidden; }
+  .map-image{ width:100%; height:auto; display:block; }
+
+  .map-pin-btn{
+    position: absolute;
+    transform: translate(-50%, -50%);
+    background: none; border: none; padding: 0; margin:0; cursor: pointer;
+    display:flex; flex-direction: column; align-items:center; gap:3px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .map-pin-btn .pin-dot{
+    width: 15px; height: 15px;
+    border-radius: 50%;
+    background: var(--pin-color);
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px var(--pin-color), 0 2px 6px rgba(0,0,0,0.35);
+    transition: transform 0.15s ease;
+  }
+  .map-pin-btn .pin-label{
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.68rem;
+    color: var(--pin-color);
+    background: rgba(255,255,255,0.92);
+    padding: 2px 7px;
+    border-radius: 3px;
+    white-space: nowrap;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  }
+  .map-pin-btn:hover .pin-dot, .map-pin-btn:focus-visible .pin-dot{ transform: scale(1.35); }
+  .map-pin-btn[data-accent="se"]{ --pin-color: var(--se); }
+  .map-pin-btn[data-accent="liberdade"]{ --pin-color: var(--liberdade); }
+  .map-pin-btn[data-accent="mooca"]{ --pin-color: var(--mooca); }
+  .map-pin-btn[data-accent="vilasonia"]{ --pin-color: var(--vilasonia); }
+
+  @media (max-width: 480px){
+    .map-pin-btn .pin-label{ font-size: 0.6rem; padding: 1px 5px; }
+    .map-pin-btn .pin-dot{ width: 12px; height: 12px; }
+  }
+
+  /* ============================================
+     BAIRRO CARDS (overview)
+     ============================================ */
+  .section-label{
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--ink-faint);
+    margin-bottom: 6px;
+  }
+  .cards{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+    padding: 20px 0 70px;
+    position: relative; z-index: 1;
+  }
+  .bairro-card{
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-top: 5px solid var(--card-accent);
+    border-radius: var(--radius-doc);
+    padding: 26px 26px 22px;
+    cursor: pointer;
+    text-align: left;
+    box-shadow: var(--paper-shadow);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    display:flex; flex-direction:column; gap: 10px;
+    color: var(--ink);
+    font-family: var(--font-body);
+  }
+  .bairro-card:hover{ transform: translateY(-3px); }
+  .bairro-card .founded{
+    font-size: 0.78rem;
+    text-transform: none;
+    color: var(--card-accent);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .bairro-card h3{ font-size: 1.5rem; margin-bottom: 2px;}
+  .bairro-card .tag{
+    font-family: var(--font-display); font-style: italic;
+    color: var(--ink-faint); font-size: 0.95rem; margin-bottom: 6px;
+  }
+  .bairro-card p{ color: var(--ink-soft); font-size: 0.92rem; margin: 0; }
+  .bairro-card .pop{
+    margin-top: 10px;
+    font-size: 0.82rem;
+    color: var(--ink-faint);
+    display:flex; align-items:center; gap:8px;
+  }
+  .pop-bar-track{
+    flex:1; height:6px; background: var(--bg-raised); border-radius: 3px; overflow:hidden;
+  }
+  .pop-bar-fill{ height:100%; background: var(--card-accent); }
+
+  /* ============================================
+     DETAIL VIEW
+     ============================================ */
+  #detail{ display:none; position: relative; z-index:1; }
+  #detail.visible{ display:block; }
+  #overview.hidden{ display:none; }
+  .info-page{ display:none; position: relative; z-index:1; padding: 50px 0 80px; }
+  .info-page.visible{ display:block; }
+  .info-page-header{ margin-bottom: 4px; }
+  .info-page-header h2{ font-size: clamp(1.8rem, 3.5vw, 2.4rem); }
+
+  .detail-header{
+    padding: 50px 0 30px;
+    border-bottom: 1px solid var(--line);
+  }
+  .back-link{
+    background:none; border:none; cursor:pointer;
+    font-family: var(--font-body); font-weight:600; font-size: 0.88rem;
+    color: var(--ink-faint);
+    padding: 0; margin-bottom: 22px;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .back-link:hover{ color: var(--ink); }
+
+  .detail-header .founded-badge{
+    display:inline-block;
+    font-size: 0.78rem;
+    font-weight:700;
+    color: var(--bg-card);
+    background: var(--accent);
+    padding: 4px 11px;
+    border-radius: 2px;
+    margin-bottom: 14px;
+  }
+  .detail-header h2{
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    color: var(--accent);
+  }
+  .detail-header .tag{
+    font-family: var(--font-display); font-style: italic;
+    font-size: 1.15rem; color: var(--ink-soft); margin-bottom: 16px;
+  }
+  .detail-header .resumo{ color: var(--ink-soft); }
+
+  .stat-row{
+    display:flex; gap: 34px; margin-top: 24px; flex-wrap: wrap;
+  }
+  .stat{
+    border-left: 3px solid var(--accent);
+    padding-left: 14px;
+  }
+  .stat .num{ font-family: var(--font-display); font-size: 1.7rem; font-weight:600; color: var(--ink); }
+  .stat .label{ font-size: 0.78rem; color: var(--ink-faint); max-width: 22ch; }
+
+  /* ---- Timeline (interactive accordion) ---- */
+  .timeline-section{ padding: 50px 0; }
+  .timeline-header-row{
+    display:flex; align-items: flex-end; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+  }
+  .mode-toggle{
+    flex-shrink: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--line-strong);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 9px 16px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .mode-toggle:hover{ border-color: var(--accent); color: var(--accent); }
+  .timeline-hint{
+    color: var(--ink-faint);
+    font-size: 0.85rem;
+    font-style: italic;
+    margin-top: -8px;
+  }
+
+  /* ---- Timeline: modo apresentação ---- */
+  .timeline-presentation{ margin-top: 24px; }
+  .tp-slide{
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--accent);
+    border-radius: 3px;
+    padding: 30px 30px 26px;
+    box-shadow: var(--paper-shadow);
+    min-height: 200px;
+  }
+  .tp-year{
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 1.15rem;
+    margin-bottom: 4px;
+  }
+  .tp-slide h3{ font-size: 1.4rem; margin-bottom: 14px; }
+  .tp-slide p{ color: var(--ink-soft); font-size: 0.98rem; margin: 0; }
+  .tp-photo{
+    position: relative;
+    width: 100%; max-width: 320px;
+    aspect-ratio: 4/3;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    box-shadow: var(--paper-shadow);
+    overflow: hidden;
+    float: right;
+    margin: 0 0 14px 20px;
+  }
+  .tp-photo img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .tp-photo .placeholder{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:6px; color: var(--ink-faint); text-align:center; padding: 8px;
+    background: repeating-linear-gradient(45deg, var(--bg-raised), var(--bg-raised) 8px, var(--bg-card) 8px, var(--bg-card) 16px);
+  }
+  .tp-photo .placeholder .icon{ font-size: 1.4rem; }
+  .tp-photo .placeholder small{ font-size: 0.6rem; word-break: break-word; }
+
+  .tp-controls{
+    display:flex; align-items:center; justify-content:center;
+    gap: 22px; margin-top: 20px;
+  }
+  .tp-btn{
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--bg-card);
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition: transform 0.15s ease;
+  }
+  .tp-btn:hover{ transform: scale(1.08); }
+  .tp-counter{
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    min-width: 54px;
+    text-align:center;
+  }
+  .tp-dots{
+    display:flex; justify-content:center; gap: 8px;
+    margin-top: 16px;
+  }
+  .tp-dot{
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--line-strong);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  .tp-dot.active{ background: var(--accent); width: 22px; border-radius: 4px; transition: width 0.2s ease; }
+
+  @media (max-width: 600px){
+    .tp-photo{ float:none; margin: 0 0 16px; max-width: 100%; }
+    .tp-slide{ padding: 22px 20px 20px; }
+  }
+
+  .timeline{
+    position: relative;
+    margin-top: 24px;
+    padding-left: 30px;
+    border-left: 2px solid var(--line);
+  }
+  .timeline-item{
+    position: relative;
+    margin-bottom: 14px;
+  }
+  .timeline-item::before{
+    content:"";
+    position:absolute;
+    left: -37px; top: 18px;
+    width: 12px; height:12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--bg);
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+  .timeline-toggle{
+    width: 100%;
+    display:flex; align-items:center; justify-content: space-between;
+    gap: 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 14px 18px;
+    cursor: pointer;
+    text-align: left;
+    font-family: var(--font-body);
+    color: var(--ink);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+  .timeline-toggle:hover{ border-color: var(--accent); }
+  .timeline-item.open .timeline-toggle{
+    border-color: var(--accent);
+    box-shadow: var(--paper-shadow);
+  }
+  .timeline-toggle-head{ display:flex; align-items:baseline; gap: 12px; flex-wrap: wrap; }
+  .timeline-toggle .year{
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 0.98rem;
+    white-space: nowrap;
+  }
+  .timeline-toggle h4{ font-size: 1.05rem; margin: 0; }
+  .timeline-caret{
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--accent);
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+  }
+  .timeline-item.open .timeline-caret{ transform: rotate(45deg); }
+
+  .timeline-body{
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+  }
+  .timeline-item.open .timeline-body{ max-height: 600px; }
+  .timeline-body-inner{
+    padding: 18px 18px 6px;
+    display:grid;
+    grid-template-columns: 1fr 180px;
+    gap: 20px;
+    align-items: start;
+  }
+  .timeline-body-inner p{ color: var(--ink-soft); font-size: 0.95rem; margin:0; }
+
+  .photo-slot{
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/3;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    box-shadow: var(--paper-shadow);
+    overflow:hidden;
+    transform: rotate(-1deg);
+  }
+  .photo-slot img{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit: cover;
+  }
+  .photo-slot .placeholder{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap: 6px;
+    padding: 10px;
+    text-align:center;
+    color: var(--ink-faint);
+    background:
+      repeating-linear-gradient(45deg, var(--bg-raised), var(--bg-raised) 8px, var(--bg-card) 8px, var(--bg-card) 16px);
+  }
+  .photo-slot .placeholder .icon{ font-size: 1.4rem; opacity:0.7; }
+  .photo-slot .placeholder small{
+    font-size: 0.62rem;
+    line-height: 1.3;
+    display:block;
+    color: var(--ink-faint);
+    word-break: break-word;
+  }
+
+  @media (max-width: 720px){
+    .timeline{ padding-left: 22px; }
+    .timeline-item::before{ left: -29px; }
+    .timeline-toggle{ padding: 12px 14px; }
+    .timeline-toggle h4{ font-size: 0.98rem; }
+    .timeline-body-inner{ grid-template-columns: 1fr; }
+    .photo-slot{ order: -1; max-width: 220px; margin: 0 auto; }
+    .timeline-item.open .timeline-body{ max-height: 900px; }
+  }
+
+  /* ---- Landmarks (pontos famosos) ---- */
+  .landmarks-section{ padding: 10px 0 20px; }
+  .landmarks-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .landmark-card{
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent);
+    border-radius: 2px;
+    padding: 0 0 16px;
+    box-shadow: var(--paper-shadow);
+    overflow: hidden;
+  }
+  .landmark-photo{
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/10;
+    background: var(--bg-raised);
+  }
+  .landmark-photo img{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    object-fit: cover;
+  }
+  .landmark-photo .placeholder{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap: 4px;
+    color: var(--ink-faint);
+    background:
+      repeating-linear-gradient(45deg, var(--bg-raised), var(--bg-raised) 8px, var(--bg-card) 8px, var(--bg-card) 16px);
+  }
+  .landmark-photo .placeholder .icon{ font-size: 1.2rem; opacity:0.7; }
+  .landmark-photo .placeholder small{ font-size: 0.6rem; color: var(--ink-faint); padding: 0 8px; text-align:center; word-break: break-word; }
+  .landmark-card h4{ font-size: 1rem; margin: 14px 18px 6px; }
+  .landmark-card p{ font-size: 0.88rem; color: var(--ink-soft); margin: 0 18px; }
+
+  /* ---- Curiosidades (flip cards) ---- */
+  .curiosidades-section{ padding: 20px 0 60px; }
+  .flip-grid{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 26px;
+  }
+  .flip-card{
+    perspective: 1200px;
+    height: 190px;
+  }
+  .flip-inner{
+    position:relative; width:100%; height:100%;
+    transition: transform 0.55s cubic-bezier(.4,.2,.2,1);
+    transform-style: preserve-3d;
+  }
+  .flip-card.flipped .flip-inner{ transform: rotateY(180deg); }
+  .flip-front, .flip-back{
+    position:absolute; inset:0;
+    backface-visibility: hidden;
+    border-radius: 3px;
+    border: 1px solid var(--line);
+    padding: 22px;
+    display:flex; flex-direction:column;
+    box-shadow: var(--paper-shadow);
+  }
+  .flip-front{
+    background: var(--accent);
+    color: var(--bg-card);
+    justify-content: space-between;
+    cursor:pointer;
+  }
+  .flip-front .num{ font-family: var(--font-display); font-style:italic; opacity:0.75; font-size:0.9rem; }
+  .flip-front h4{ color: var(--bg-card); font-size: 1.15rem; margin:0; }
+  .flip-front .hint{ font-size: 0.75rem; opacity:0.8; align-self:flex-end; }
+  .flip-back{
+    background: var(--bg-card);
+    transform: rotateY(180deg);
+    justify-content:center;
+    cursor:pointer;
+    overflow-y:auto;
+  }
+  .flip-back p{ font-size: 0.9rem; color: var(--ink-soft); margin:0; max-width: none; }
+
+  /* ---- Before / After slider ---- */
+  .compare-section{ padding: 10px 0 70px; }
+  .compare-frame{
+    position: relative;
+    max-width: 640px;
+    aspect-ratio: 16/10;
+    margin: 26px auto 0;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    overflow:hidden;
+    box-shadow: var(--paper-shadow);
+    user-select:none;
+  }
+  .compare-layer{
+    position:absolute; inset:0;
+  }
+  .compare-layer img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  }
+  .compare-layer .placeholder{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:6px; text-align:center; color: var(--ink-faint);
+    background: repeating-linear-gradient(45deg, var(--bg-raised), var(--bg-raised) 10px, var(--bg-card) 10px, var(--bg-card) 20px);
+  }
+  .compare-layer .badge{
+    position:absolute; top:12px; left:12px;
+    background: rgba(0,0,0,0.55); color:#fff;
+    font-size: 0.7rem; font-weight:700; letter-spacing:0.04em;
+    padding: 4px 9px; border-radius: 2px;
+  }
+  .compare-after{ clip-path: inset(0 0 0 50%); }
+  .compare-handle{
+    position:absolute; top:0; bottom:0; left:50%;
+    width: 3px; background: var(--accent);
+    transform: translateX(-50%);
+    cursor: ew-resize;
+  }
+  .compare-handle::after{
+    content: "↔";
+    position:absolute; top:50%; left:50%;
+    transform: translate(-50%,-50%);
+    width: 38px; height:38px;
+    background: var(--accent); color: var(--bg-card);
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 1.1rem;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+  }
+  .compare-note{
+    text-align:center; font-size: 0.8rem; color: var(--ink-faint);
+    margin-top: 12px; font-style:italic;
+  }
+
+  /* ============================================
+     ABOUT / VOLUNTEER (placeholder pages)
+     ============================================ */
+  .placeholder-block{
+    background: var(--bg-card);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius-doc);
+    padding: 26px 28px;
+    margin-top: 20px;
+  }
+  .placeholder-block p{ color: var(--ink-soft); font-size: 0.96rem; }
+  .placeholder-tag{
+    display:inline-block;
+    margin-top: 10px;
+    font-size: 0.78rem;
+    font-style: italic;
+    color: var(--ink-faint);
+    background: var(--bg-raised);
+    padding: 4px 10px;
+    border-radius: 3px;
+  }
+  .volunteer-cta{
+    display:inline-block;
+    background: var(--se);
+    color: var(--bg-card);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.92rem;
+    padding: 11px 20px;
+    border-radius: 3px;
+    margin-top: 4px;
+  }
+
+  .team-section, .partners-section{ margin-top: 44px; }
+  .team-section h3, .partners-section h3{ font-size: 1.4rem; }
+  .team-intro{ color: var(--ink-soft); font-size: 0.94rem; margin: 6px 0 18px; }
+  .team-photo-slot{
+    position: relative;
+    width: 100%; max-width: 640px;
+    aspect-ratio: 16/10;
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    box-shadow: var(--paper-shadow);
+  }
+  .team-photo-slot img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .team-photo-slot .placeholder{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:6px; color: var(--ink-faint);
+    background: repeating-linear-gradient(45deg, var(--bg-raised), var(--bg-raised) 8px, var(--bg-card) 8px, var(--bg-card) 16px);
+  }
+  .team-photo-slot .placeholder .icon{ font-size: 1.6rem; }
+  .team-photo-slot .placeholder small{ font-size: 0.62rem; }
+
+  .partners-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 18px;
+    max-width: 520px;
+  }
+  .partner-slot{
+    position: relative;
+    aspect-ratio: 1/1;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: var(--paper-shadow);
+  }
+  .partner-slot img{ position:absolute; inset:0; width:100%; height:100%; object-fit:contain; }
+  .partner-slot .placeholder{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:4px; color: var(--ink-faint);
+    background: repeating-linear-gradient(45deg, var(--bg-raised), var(--bg-raised) 7px, var(--bg-card) 7px, var(--bg-card) 14px);
+  }
+  .partner-slot .placeholder .icon{ font-size: 1.2rem; }
+  .partner-slot .placeholder small{ font-size: 0.55rem; padding: 0 4px; text-align:center; word-break: break-word; }
+
+  @media (max-width: 480px){
+    .partners-grid{ max-width: 280px; gap: 10px; }
+  }
+
+  /* ============================================
+     FOOTER
+     ============================================ */
+  footer{
+    border-top: 1px solid var(--line);
+    padding: 40px 0 60px;
+    color: var(--ink-faint);
+    font-size: 0.85rem;
+    position: relative; z-index:1;
+  }
+  footer .foot-grid{
+    display:flex; justify-content: space-between; gap: 20px; flex-wrap:wrap;
+  }
+  footer strong{ color: var(--ink-soft); }
+
+  @media (max-width: 860px){
+    .hero-grid{ grid-template-columns: 1fr; }
+    .cards{ grid-template-columns: 1fr; }
+    .flip-grid{ grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 640px){
+    body{ font-size: 16px; }
+    .wrap{ padding: 0 18px; }
+    .hero{ padding: 40px 0 28px; }
+    .hero h1{ max-width: none; }
+    .map-frame{ padding: 12px; }
+    .detail-header{ padding: 32px 0 22px; }
+    .stat-row{ gap: 22px; }
+    .stat .num{ font-size: 1.4rem; }
+    .bairro-card{ padding: 20px 20px 18px; }
+    .flip-card{ height: 210px; }
+    .compare-frame{ max-width: 100%; }
+    .foot-grid{ flex-direction: column; gap: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <button class="brand" onclick="mostrarVisaoGeral()">Bairros de SP <span>· história &amp; memória</span></button>
+    <nav class="nav-bairros" id="navBairros" aria-label="Navegação entre bairros"></nav>
+    <nav class="nav-pages" aria-label="Páginas institucionais">
+      <button id="nav-sobre" onclick="mostrarSobre()">Quem somos</button>
+      <button id="nav-participe" onclick="mostrarParticipe()">Participe</button>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema claro e escuro">
+      <span id="themeIcon">🌘</span> <span id="themeLabel">Modo sépia</span>
+    </button>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <!-- ===================== VISÃO GERAL ===================== -->
+  <div id="overview">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="org-logo-slot">
+            <img src="assets/img/logo-ong.png" alt="Logo da ONG"
+                 onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'">
+            <div class="placeholder">
+              <span class="icon">🖼️</span>
+              <span>Logo da ONG</span>
+              <small>assets/img/logo-ong.png</small>
+            </div>
+          </div>
+          <div class="kicker">Um passeio (bem paulistano) pela história da cidade</div>
+          <h1>Quatro bairros, um monte de história</h1>
+          <p class="lede">
+            A Sé, a Liberdade, a Vila Sônia e a Moóca contam pedaços diferentes da mesma cidade — cada uma
+            com sua fundação, suas histórias, suas curiosidades e seus cantos favoritos. Escolhe um bairro
+            aí embaixo e vem descobrir com a gente.
+          </p>
+        </div>
+        <div class="map-frame">
+          <div class="map-image-wrap">
+            <img src="assets/img/mapa-distritos-sp.png" alt="Mapa dos distritos de São Paulo" class="map-image">
+            <button class="map-pin-btn" style="left:55.7%; top:41.0%;" data-accent="se" onclick="mostrarBairro('se')" aria-label="Ver bairro da Sé">
+              <span class="pin-dot"></span><span class="pin-label">Sé</span>
+            </button>
+            <button class="map-pin-btn" style="left:57.0%; top:58.4%;" data-accent="liberdade" onclick="mostrarBairro('liberdade')" aria-label="Ver bairro da Liberdade">
+              <span class="pin-dot"></span><span class="pin-label">Liberdade</span>
+            </button>
+            <button class="map-pin-btn" style="left:64.0%; top:42.0%;" data-accent="mooca" onclick="mostrarBairro('mooca')" aria-label="Ver bairro da Moóca">
+              <span class="pin-dot"></span><span class="pin-label">Moóca</span>
+            </button>
+            <button class="map-pin-btn" style="left:10.5%; top:76.1%;" data-accent="vilasonia" onclick="mostrarBairro('vilasonia')" aria-label="Ver bairro da Vila Sônia">
+              <span class="pin-dot"></span><span class="pin-label">Vila Sônia</span>
+            </button>
+          </div>
+          <div class="map-caption">Mapa dos distritos de São Paulo — toque num marcador pra conhecer o bairro</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-label">Bora explorar?</div>
+      <h2 style="margin-bottom:26px;">Escolhe um bairro pra começar</h2>
+      <div class="cards" id="cardsGrid"></div>
+    </section>
+  </div>
+
+  <!-- ===================== DETALHE DO BAIRRO ===================== -->
+  <div id="detail"></div>
+
+  <!-- ===================== QUEM SOMOS ===================== -->
+  <div id="about" class="info-page">
+    <div class="info-page-header">
+      <button class="back-link" onclick="mostrarVisaoGeral()">← Voltar pros bairros</button>
+      <div class="section-label">Quem tá por trás disso</div>
+      <h2>Quem somos</h2>
+    </div>
+    <div class="placeholder-block">
+      <p>
+        [Nome da ONG] é uma organização dedicada a [preencha aqui: propósito da ONG — por exemplo, preservação
+        da memória urbana, educação patrimonial ou cultura comunitária]. Este site é parte desse trabalho, unindo
+        pesquisa histórica e tecnologia pra contar a história de São Paulo através dos seus bairros.
+      </p>
+      <span class="placeholder-tag">✏️ texto placeholder — edite este bloco com o nome e o propósito reais da ONG</span>
+    </div>
+
+    <section class="team-section">
+      <div class="section-label">Quem faz acontecer</div>
+      <h3>Conheça a equipe</h3>
+      <p class="team-intro">[Frase curta de introdução — quem forma a equipe e o que cada um faz no projeto.]</p>
+      <div class="team-photo-slot">
+        <img src="assets/img/equipe-foto.jpg" alt="Foto da equipe"
+             onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'">
+        <div class="placeholder">
+          <span class="icon">🖼️</span>
+          <small>assets/img/equipe-foto.jpg</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="partners-section">
+      <div class="section-label">Quem apoia</div>
+      <h3>Parceiras da ONG</h3>
+      <div class="partners-grid">
+        <div class="partner-slot">
+          <img src="assets/img/parceira-01.png" alt="Organização parceira"
+               onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'">
+          <div class="placeholder"><span class="icon">🖼️</span><small>assets/img/parceira-01.png</small></div>
+        </div>
+        <div class="partner-slot">
+          <img src="assets/img/parceira-02.png" alt="Organização parceira"
+               onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'">
+          <div class="placeholder"><span class="icon">🖼️</span><small>assets/img/parceira-02.png</small></div>
+        </div>
+        <div class="partner-slot">
+          <img src="assets/img/parceira-03.png" alt="Organização parceira"
+               onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'">
+          <div class="placeholder"><span class="icon">🖼️</span><small>assets/img/parceira-03.png</small></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===================== PARTICIPE ===================== -->
+  <div id="participe" class="info-page">
+    <div class="info-page-header">
+      <button class="back-link" onclick="mostrarVisaoGeral()">← Voltar pros bairros</button>
+      <div class="section-label">Ajuda a gente a lembrar</div>
+      <h2>Participe</h2>
+    </div>
+    <div class="placeholder-block">
+      <p>
+        Cada bairro tem histórias que não estão em nenhum livro — e talvez estejam guardadas com você.
+        Tem uma foto antiga do seu bairro, uma lembrança de infância, a história que seu avô contava sobre
+        a rua onde morava? Compartilha com a gente. É esse tipo de memória que dá vida a este site e ajuda
+        a preservar um pedaço da história de São Paulo que só quem viveu sabe contar.
+      </p>
+      <a class="volunteer-cta" href="mailto:contato@suaong.org.br">Quero compartilhar minha história</a>
+      <span class="placeholder-tag">✏️ e-mail placeholder — troque pelo contato real da ONG</span>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="wrap foot-grid">
+    <div style="max-width:520px;">
+      <strong>Sobre esse site</strong><br>
+      Um projeto sobre a história e a cultura de quatro bairros de São Paulo — Sé, Liberdade,
+      Vila Sônia e Moóca. Os números de população vêm do Censo do IBGE (2022, ou 2010 quando
+      indicado). Os espaços de foto estão reservados para imagens de acervo pessoal ou domínio público.
+    </div>
+    <div>
+      <strong>Quer ajudar com fotos?</strong><br>
+      Salva o arquivo em <code>assets/img/</code> usando o nome indicado em cada
+      espaço reservado. A foto aparece sozinha no lugar do quadriculado assim que o
+      arquivo existir — não precisa mexer em mais nada.
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   DADOS DOS BAIRROS
+   Para adicionar uma foto: salve o arquivo em assets/img/ com o
+   nome indicado em "foto" de cada item da timeline, ou nos campos
+   fotoAntes / fotoDepois do comparador.
+   ============================================================ */
+const bairros = [
+  {
+    id: "se",
+    nome: "Sé",
+    accentVar: "--se",
+    tag: "O berço de São Paulo",
+    fundacao: "25 de janeiro de 1554",
+    anoFundacao: 1554,
+    areaKm2: 2.1,
+    populacao: 23650,
+    populacaoAno: "Censo 2010 — dado distrital mais recente disponível; a Sé é hoje um distrito majoritariamente comercial, com poucos moradores fixos",
+    idh: 0.858,
+    idhFonte: "Atlas do Desenvolvimento Humano (PNUD/Ipea/FJP), dado por subprefeitura",
+    resumo: "Tudo começou aqui. No planalto entre os rios Tietê e Tamanduateí, jesuítas ergueram uma cabana de taipa e celebraram a missa que batizaria a cidade. Sete séculos depois, a Sé ainda é o marco zero — literalmente — de São Paulo.",
+    pontosFamosos: [
+      { nome: "Catedral Metropolitana da Sé", texto: "Um dos maiores templos neogóticos do mundo, construído entre 1913 e 1954. Abriga uma cripta com bispos e um cacique indígena.", foto: "se-pf-catedral.jpg" },
+      { nome: "Praça da Sé e Marco Zero", texto: "O monumento que define a quilometragem de todas as estradas que partem de São Paulo.", foto: "se-pf-marco-zero.jpg" },
+      { nome: "Pátio do Colégio", texto: "Local exato da fundação da cidade em 1554, hoje com museu, igreja e café.", foto: "se-pf-patio-colegio.jpg" },
+      { nome: "Mercado Municipal (Mercadão)", texto: "Templo da gastronomia paulistana, famoso pelo sanduíche de mortadela e pelos vitrais coloridos.", foto: "se-pf-mercadao.jpg" },
+      { nome: "Mosteiro de São Bento", texto: "Um dos redutos do canto gregoriano em São Paulo, com missas cantadas pelos monges beneditinos.", foto: "se-pf-mosteiro.jpg" }
+    ],
+    timeline: [
+      { ano: "1554", titulo: "Primeira missa e fundação", texto: "O padre Manuel da Nóbrega e um grupo de jesuítas, entre eles José de Anchieta, erguem uma cabana no Pátio do Colégio e celebram a primeira missa do povoado de São Paulo de Piratininga.", foto: "se-01-fundacao-1554.jpg" },
+      { ano: "Séculos XVI–XVII", titulo: "Entreposto estratégico", texto: "Situada num planalto entre os rios Tietê e Tamanduateí, a pequena vila se torna ponto de passagem para viajantes rumo ao sertão, em meio a conflitos com povos tamoios e carijós.", foto: "se-02-entreposto.jpg" },
+      { ano: "Século XIX", titulo: "A cidade do café", texto: "Com a riqueza cafeeira, São Paulo se expande. A elite passa a dividir o tempo entre fazendas e palacetes de bairros vizinhos, enquanto o núcleo da Sé se firma como centro administrativo e religioso.", foto: "se-03-cafe-seculo19.jpg" },
+      { ano: "1913–1954", titulo: "Construção da Catedral", texto: "O arquiteto alemão Maximilian Hehl projeta a Catedral Metropolitana da Sé, um dos maiores templos neogóticos do mundo. As obras levam mais de quatro décadas para ficar prontas.", foto: "se-04-catedral.jpg" },
+      { ano: "Século XX", titulo: "O Marco Zero", texto: "A Praça da Sé recebe o monumento que passa a definir a quilometragem de todas as estradas que partem da cidade de São Paulo.", foto: "se-05-marco-zero.jpg" },
+      { ano: "Hoje", titulo: "Centro histórico vivo", texto: "Museus como o de Arte Sacra e o Pateo do Collegio preservam a memória da fundação, enquanto o comércio popular e o fluxo diário de milhares de pessoas movimentam as ruas ao redor.", foto: "se-06-hoje.jpg" }
+    ],
+    curiosidades: [
+      { titulo: "Um nome, um significado", texto: "\"Sé\" vem do latim sedes, que significa \"sede\" — uma referência direta à sede da Arquidiocese de São Paulo, abrigada na Catedral." },
+      { titulo: "Quem está sob o altar", texto: "Na cripta da Catedral da Sé estão sepultados diversos bispos e figuras históricas, incluindo um cacique indígena." },
+      { titulo: "O ponto de partida das estradas", texto: "Todas as distâncias rodoviárias que partem de São Paulo são contadas a partir do Marco Zero, cravado na Praça da Sé." },
+      { titulo: "O lugar onde tudo começou", texto: "O Pátio do Colégio, marco da fundação da cidade, reúne hoje um museu, uma igreja e um café no mesmo terreno onde os jesuítas se instalaram em 1554." }
+    ],
+    fotoAntesLabel: "se-antes-seculo-xx.jpg",
+    fotoDepoisLabel: "se-depois-atual.jpg"
+  },
+  {
+    id: "liberdade",
+    nome: "Liberdade",
+    accentVar: "--liberdade",
+    tag: "Do Largo da Forca às lanternas vermelhas",
+    fundacao: "Ocupação intensa a partir de 1912",
+    anoFundacao: 1912,
+    areaKm2: 3.7,
+    populacao: 66056,
+    populacaoAno: "Censo 2022 (IBGE)",
+    idh: 0.870,
+    idhFonte: "Atlas do Desenvolvimento Humano (PNUD/Ipea/FJP); renda média mensal domiciliar per capita em torno de R$ 2.500",
+    resumo: "Antes de virar sinônimo de cultura oriental, a região já carregava um nome pesado: Bairro da Pólvora, palco de execuções no período colonial. A chegada da imigração japonesa, a partir de 1908, reescreveu a paisagem — sem apagar essa história anterior.",
+    timeline: [
+      { ano: "Século XVIII", titulo: "O Bairro da Pólvora", texto: "A região é conhecida por sediar a Casa da Pólvora (1754) e o Largo da Forca, local de execuções de pessoas escravizadas fugitivas e condenados durante o período colonial.", foto: "liberdade-01-bairro-polvora.jpg" },
+      { ano: "1821", titulo: "De onde vem o nome", texto: "Após a execução dos soldados Chaguinhas e Cotindiba, o local passa a ser chamado \"Liberdade\" em memória do episódio.", foto: "liberdade-02-origem-nome.jpg" },
+      { ano: "1908", titulo: "Chegada ao Brasil", texto: "O navio Kasato Maru desembarca os primeiros imigrantes japoneses no país, dando início a um dos maiores fluxos migratórios da história paulistana.", foto: "liberdade-03-kasato-maru.jpg" },
+      { ano: "1912", titulo: "Primeiros moradores", texto: "Famílias japonesas passam a viver na Rua Conde de Sarzedas, atraídas pelos aluguéis baratos de quartos de porão e pela proximidade com o centro de trabalho.", foto: "liberdade-04-conde-de-sarzedas.jpg" },
+      { ano: "1940–1950", titulo: "Consolidação cultural", texto: "Surgem jornais como o São Paulo Shimbun (1946), livrarias, agências de viagem e uma vida comunitária intensa em torno da Avenida Liberdade.", foto: "liberdade-05-consolidacao.jpg" },
+      { ano: "Hoje", titulo: "Bairro multicultural", texto: "Japoneses, chineses, coreanos e taiwaneses dividem o território. O Memorial dos Aflitos mantém viva a memória da população negra que também fez parte da história do bairro.", foto: "liberdade-06-hoje.jpg" }
+    ],
+    curiosidades: [
+      { titulo: "Um dos melhores destinos do mundo", texto: "A Liberdade foi eleita um dos 25 melhores destinos turísticos do planeta em levantamento divulgado pela prefeitura de São Paulo." },
+      { titulo: "O símbolo mais fotografado", texto: "As lanternas vermelhas da Avenida Liberdade e o Viaduto Cidade de Osaka viraram um dos cartões-postais mais reconhecíveis da cidade." },
+      { titulo: "Uma memória reacendida", texto: "Em 2018, a descoberta de ossadas na região reacendeu o debate sobre a preservação da memória negra local, ligada ao antigo Largo da Forca." },
+      { titulo: "Mais de 400 mil descendentes", texto: "Estima-se que mais de 400 mil japoneses e seus descendentes vivam hoje na cidade de São Paulo." }
+    ],
+    pontosFamosos: [
+      { nome: "Museu Histórico da Imigração Japonesa", texto: "Reúne acervo sobre a chegada e a trajetória dos imigrantes japoneses no Brasil desde 1908.", foto: "liberdade-pf-museu.jpg" },
+      { nome: "Avenida Liberdade e suas lanternas", texto: "As lanternas vermelhas (chochin) e as fachadas em estilo oriental viraram o cartão-postal do bairro.", foto: "liberdade-pf-avenida.jpg" },
+      { nome: "Viaduto Cidade de Osaka", texto: "Ponto clássico para fotos, decorado com postes em formato de lanterna japonesa.", foto: "liberdade-pf-viaduto.jpg" },
+      { nome: "Feira de artesanato da Praça da Liberdade", texto: "Aos fins de semana, reúne comida, artesanato e apresentações culturais orientais.", foto: "liberdade-pf-feira.jpg" },
+      { nome: "Jardim Oriental", texto: "Pequeno parque projetado no estilo japonês, com lago e pontes tradicionais.", foto: "liberdade-pf-jardim.jpg" }
+    ],
+    fotoAntesLabel: "liberdade-antes-seculo-xx.jpg",
+    fotoDepoisLabel: "liberdade-depois-atual.jpg"
+  },
+  {
+    id: "vilasonia",
+    nome: "Vila Sônia",
+    accentVar: "--vilasonia",
+    tag: "Da mata de eucaliptos ao bairro consolidado",
+    fundacao: "28 de outubro de 1948",
+    anoFundacao: 1948,
+    areaKm2: 9.9,
+    populacao: 123748,
+    populacaoAno: "Censo 2022 (IBGE)",
+    idh: 0.895,
+    idhFonte: "Atlas do Desenvolvimento Humano (PNUD/Ipea/FJP), dado por subprefeitura",
+    resumo: "É o mais jovem dos quatro bairros — e também o mais populoso. Onde hoje moram mais de 120 mil pessoas, até a década de 1940 havia apenas uma grande chácara coberta por mata de eucaliptos.",
+    timeline: [
+      { ano: "Até 1940", titulo: "Chácara e mata", texto: "A área é uma grande propriedade rural dos médicos Antonio Bueno e Joaquim Manuel da Fonseca, coberta por mata de eucaliptos.", foto: "vilasonia-01-chacara.jpg" },
+      { ano: "Início do século XX", titulo: "A \"Vila Japonesa\"", texto: "O local recebe esse apelido por sediar a sede social e esportiva da Cooperativa Agrícola de Cotia (CAC), frequentada por famílias de imigrantes japoneses.", foto: "vilasonia-02-vila-japonesa.jpg" },
+      { ano: "28/10/1948", titulo: "Nascimento oficial", texto: "É aprovado o arruamento e o loteamento da região, batizada Vila Sônia em homenagem a uma das filhas de Antonio Bueno. A data se tornaria o \"Dia da Vila Sônia\".", foto: "vilasonia-03-loteamento-1948.jpg" },
+      { ano: "Década de 1950", titulo: "Vida difícil", texto: "Os primeiros moradores enfrentam a falta de luz elétrica, água encanada e ruas asfaltadas, além de enchentes do córrego Pirajussara.", foto: "vilasonia-04-decada-1950.jpg" },
+      { ano: "Década de 1960", titulo: "O bairro cresce", texto: "A proximidade com o Morumbi atrai novos moradores, e um comércio incipiente começa a se firmar na região.", foto: "vilasonia-05-decada-1960.jpg" },
+      { ano: "Hoje", titulo: "Um dos maiores da zona oeste", texto: "Com a chegada da Estação Vila Sônia da Linha 4-Amarela do Metrô, a região se consolidou como um dos distritos mais populosos da zona oeste de São Paulo.", foto: "vilasonia-06-hoje.jpg" }
+    ],
+    curiosidades: [
+      { titulo: "Uma homenagem, não uma santa", texto: "O nome do bairro não remete a nenhuma santa: é uma homenagem a Sônia, filha de um dos antigos proprietários das terras, o médico Antonio Bueno." },
+      { titulo: "A segunda maior comunidade japonesa", texto: "A Vila Sônia é o bairro paulistano com o segundo maior número de descendentes de japoneses, atrás apenas da Liberdade." },
+      { titulo: "Composta atrás das grades", texto: "Em 1961, um ex-detento do Carandiru compôs a valsa \"Luar de Vila Sônia\", que fez sucesso nas rádios na voz do cantor Tito Martines." },
+      { titulo: "De mata a metrópole", texto: "Nas décadas de 1940, onde hoje vivem mais de 120 mil pessoas, existia apenas uma extensa mata de eucaliptos." }
+    ],
+    pontosFamosos: [
+      { nome: "Estação Vila Sônia (Metrô Linha 4-Amarela)", texto: "Terminal da linha amarela, tornou-se o principal símbolo da modernização do bairro.", foto: "vilasonia-pf-estacao.jpg" },
+      { nome: "Shopping Butantã", texto: "Um dos polos de comércio e lazer mais movimentados da região oeste.", foto: "vilasonia-pf-shopping.jpg" },
+      { nome: "Avenida Professor Francisco Morato", texto: "Principal via de acesso do bairro, concentra comércio e serviços.", foto: "vilasonia-pf-avenida.jpg" },
+      { nome: "Rodovia Raposo Tavares", texto: "Liga o bairro ao interior do estado e marca a paisagem urbana da região.", foto: "vilasonia-pf-raposo.jpg" }
+    ],
+    fotoAntesLabel: "vilasonia-antes-seculo-xx.jpg",
+    fotoDepoisLabel: "vilasonia-depois-atual.jpg"
+  },
+  {
+    id: "mooca",
+    nome: "Moóca",
+    accentVar: "--mooca",
+    tag: "A casa que os tupis construíram, a Itália que chegou depois",
+    fundacao: "1556",
+    anoFundacao: 1556,
+    areaKm2: 7.7,
+    populacao: 80880,
+    populacaoAno: "Censo 2022 (IBGE)",
+    idh: 0.909,
+    idhFonte: "Atlas do Desenvolvimento Humano (PNUD/Ipea/FJP); renda per capita descrita como superior à média municipal",
+    resumo: "Fundada dois anos depois da própria cidade de São Paulo, a Moóca leva no nome a marca indígena que a batizou — e no sotaque, a marca da imigração italiana que a transformaria num símbolo operário e gastronômico.",
+    timeline: [
+      { ano: "1556", titulo: "Fundação e origem do nome", texto: "Dois anos após São Paulo, a Moóca nasce em terras habitadas por povos guaianases e tupiniquins. O nome vem do tupi \"moo\" (fazer) + \"oca\" (casa).", foto: "mooca-01-fundacao-1556.jpg" },
+      { ano: "Século XVII", titulo: "Sesmaria colonial", texto: "A região integra uma extensa sesmaria do sargento-mor Antônio de Alvarenga, ainda coberta por mata atlântica.", foto: "mooca-02-sesmaria.jpg" },
+      { ano: "1865", titulo: "A chegada da ferrovia", texto: "A primeira estrada de ferro paulista liga a Estação da Luz à Estação Mooca, atraindo vilas operárias e novos moradores para a região.", foto: "mooca-03-ferrovia-1865.jpg" },
+      { ano: "Fim do século XIX", titulo: "A imigração italiana", texto: "Milhares de italianos chegam à Moóca, fundam a Sociedade Italiana da Moóca e instalam fábricas de massas, como as das famílias Carolina Gallo e Romanelli.", foto: "mooca-04-imigracao-italiana.jpg" },
+      { ano: "Início do século XX", titulo: "Bairro operário", texto: "Indústrias como a Antarctica Paulista e a Fiação e Tecelagem Alpargatas empregam milhares de trabalhadores. Em 1935 é inaugurada a Paróquia de San Gennaro.", foto: "mooca-05-bairro-operario.jpg" },
+      { ano: "Hoje", titulo: "Reinvenção gastronômica", texto: "Antigos galpões fabris viram lofts, cervejarias artesanais e restaurantes, enquanto a tradicional Festa de San Gennaro mantém viva a herança italiana.", foto: "mooca-06-hoje.jpg" }
+    ],
+    curiosidades: [
+      { titulo: "Um sotaque só seu", texto: "A Moóca tem um jeito próprio de falar, o \"mooquês\", reconhecido por seu sotaque característico e orgulhosamente cultivado pelos moradores." },
+      { titulo: "Um dialeto que resiste", texto: "Algumas famílias descendentes de italianos ainda falam o Talian, dialeto de origem vêneta trazido pelos imigrantes no fim do século XIX." },
+      { titulo: "Berço do movimento operário", texto: "O bairro foi palco de uma das primeiras greves de trabalhadores da cidade de São Paulo, reflexo de sua vocação industrial." },
+      { titulo: "A festa mais concorrida do bairro", texto: "A tradicional Festa de San Gennaro reúne comida, música e fé em uma das celebrações italianas mais concorridas da cidade." }
+    ],
+    pontosFamosos: [
+      { nome: "Paróquia de San Gennaro", texto: "Inaugurada em 1935, é o coração espiritual da comunidade italiana e palco da tradicional festa homônima.", foto: "mooca-pf-paroquia.jpg" },
+      { nome: "Antiga Cervejaria Antarctica", texto: "Marco da fase industrial do bairro, hoje reconvertida para novos usos urbanos.", foto: "mooca-pf-cervejaria.jpg" },
+      { nome: "Cantinas tradicionais", texto: "Restaurantes centenários mantêm viva a herança gastronômica italiana da imigração.", foto: "mooca-pf-cantinas.jpg" },
+      { nome: "Shopping Plaza Mooca", texto: "Um dos centros comerciais mais movimentados da zona leste.", foto: "mooca-pf-shopping.jpg" },
+      { nome: "Galpões industriais reconvertidos", texto: "Antigas fábricas viraram lofts, cervejarias artesanais e espaços culturais.", foto: "mooca-pf-galpoes.jpg" }
+    ],
+    fotoAntesLabel: "mooca-antes-seculo-xx.jpg",
+    fotoDepoisLabel: "mooca-depois-atual.jpg"
+  }
+];
+
+const IMG_BASE = "assets/img/";
+const maxPop = Math.max(...bairros.map(b => b.populacao));
+let currentBairro = null;
+let currentSlide = 0;
+
+/* ---------- Render: nav + cards ---------- */
+function renderOverview(){
+  const nav = document.getElementById("navBairros");
+  const cards = document.getElementById("cardsGrid");
+  nav.innerHTML = "";
+  cards.innerHTML = "";
+
+  bairros.forEach(b => {
+    const navBtn = document.createElement("button");
+    navBtn.textContent = b.nome;
+    navBtn.id = "nav-" + b.id;
+    navBtn.style.setProperty("--accent", `var(${b.accentVar})`);
+    navBtn.onclick = () => mostrarBairro(b.id);
+    nav.appendChild(navBtn);
+
+    const card = document.createElement("button");
+    card.className = "bairro-card";
+    card.style.setProperty("--card-accent", `var(${b.accentVar})`);
+    card.onclick = () => mostrarBairro(b.id);
+    const popPct = Math.round((b.populacao / maxPop) * 100);
+    card.innerHTML = `
+      <div class="founded">Existe desde ${b.fundacao}</div>
+      <h3>${b.nome}</h3>
+      <div class="tag">${b.tag}</div>
+      <p>${b.resumo}</p>
+      <div class="pop">
+        <span>${b.populacao.toLocaleString('pt-BR')} hab.</span>
+        <span class="pop-bar-track"><span class="pop-bar-fill" style="width:${popPct}%"></span></span>
+      </div>
+    `;
+    cards.appendChild(card);
+  });
+}
+
+/* ---------- Render: detail page ---------- */
+function renderDetail(b){
+  const el = document.getElementById("detail");
+  el.style.setProperty("--accent", `var(${b.accentVar})`);
+  currentBairro = b;
+  currentSlide = 0;
+
+  const idade = new Date().getFullYear() - b.anoFundacao;
+
+  const timelineHtml = b.timeline.map((item, i) => `
+    <div class="timeline-item" id="tl-${b.id}-${i}">
+      <button class="timeline-toggle" onclick="toggleTimelineItem('${b.id}', ${i})" aria-expanded="${i === 0 ? 'true' : 'false'}">
+        <div class="timeline-toggle-head">
+          <span class="year">${item.ano}</span>
+          <h4>${item.titulo}</h4>
+        </div>
+        <span class="timeline-caret">＋</span>
+      </button>
+      <div class="timeline-body">
+        <div class="timeline-body-inner">
+          <p>${item.texto}</p>
+          <div class="photo-slot">
+            <img src="${IMG_BASE}${item.foto}" alt="Foto histórica: ${item.titulo} — ${b.nome}"
+                 onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'">
+            <div class="placeholder">
+              <span class="icon">🖼️</span>
+              <span>Espaço para foto</span>
+              <small>${IMG_BASE}${item.foto}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join("");
+
+  const pontosFamososHtml = (b.pontosFamosos || []).map(p => `
+    <div class="landmark-card">
+      <div class="landmark-photo">
+        <img src="${IMG_BASE}${p.foto}" alt="${p.nome}"
+             loading="lazy" onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'">
+        <div class="placeholder">
+          <span class="icon">🖼️</span>
+          <small>${IMG_BASE}${p.foto}</small>
+        </div>
+      </div>
+      <h4>${p.nome}</h4>
+      <p>${p.texto}</p>
+    </div>
+  `).join("");
+
+  const curiosidadesHtml = b.curiosidades.map((c, i) => `
+    <div class="flip-card" onclick="this.classList.toggle('flipped')" role="button" tabindex="0"
+         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault(); this.classList.toggle('flipped')}">
+      <div class="flip-inner">
+        <div class="flip-front">
+          <span class="num">Curiosidade ${String(i+1).padStart(2,'0')}</span>
+          <h4>${c.titulo}</h4>
+          <span class="hint">toca aí pra ler ↺</span>
+        </div>
+        <div class="flip-back"><p>${c.texto}</p></div>
+      </div>
+    </div>
+  `).join("");
+
+  el.innerHTML = `
+    <div class="detail-header">
+      <button class="back-link" onclick="mostrarVisaoGeral()">← Voltar pros bairros</button>
+      <div class="founded-badge">Surgiu em ${b.fundacao}</div>
+      <h2>${b.nome}</h2>
+      <div class="tag">${b.tag}</div>
+      <p class="resumo">${b.resumo}</p>
+      <div class="stat-row">
+        <div class="stat">
+          <div class="num">${b.populacao.toLocaleString('pt-BR')}</div>
+          <div class="label">pessoas moram por aqui — ${b.populacaoAno}</div>
+        </div>
+        <div class="stat">
+          <div class="num">≈ ${idade} anos</div>
+          <div class="label">de história, contando desde ${b.anoFundacao}</div>
+        </div>
+        <div class="stat">
+          <div class="num">${b.areaKm2.toLocaleString('pt-BR')} km²</div>
+          <div class="label">de área — dá pra imaginar o tamanho</div>
+        </div>
+        <div class="stat">
+          <div class="num">${b.idh.toFixed(3).replace('.', ',')}</div>
+          <div class="label">IDH (renda, educação e longevidade) — ${b.idhFonte}</div>
+        </div>
+      </div>
+    </div>
+
+    <section class="compare-section">
+      <div class="section-label">Bate o olho nisso</div>
+      <h2>Antes e agora</h2>
+      <div class="compare-frame" id="compareFrame-${b.id}">
+        <div class="compare-layer compare-before">
+          <img src="${IMG_BASE}${b.fotoAntesLabel}" alt="${b.nome} no passado" loading="lazy" onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'">
+          <div class="placeholder"><span class="icon">🖼️</span><span>Foto antiga</span><small>${IMG_BASE}${b.fotoAntesLabel}</small></div>
+          <span class="badge">ANTES</span>
+        </div>
+        <div class="compare-layer compare-after">
+          <img src="${IMG_BASE}${b.fotoDepoisLabel}" alt="${b.nome} atualmente" loading="lazy" onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'">
+          <div class="placeholder"><span class="icon">🖼️</span><span>Foto atual</span><small>${IMG_BASE}${b.fotoDepoisLabel}</small></div>
+          <span class="badge">HOJE</span>
+        </div>
+        <div class="compare-handle"></div>
+      </div>
+      <div class="compare-note">Arrasta o botão do meio pra ver a diferença entre as duas épocas</div>
+    </section>
+
+    <section class="timeline-section">
+      <div class="timeline-header-row">
+        <div>
+          <div class="section-label">Como tudo aconteceu</div>
+          <h2>Da fundação até hoje</h2>
+        </div>
+        <button class="mode-toggle" id="modeToggle" onclick="toggleTimelineMode()">🎞️ Modo apresentação</button>
+      </div>
+      <p class="timeline-hint" id="timelineHint">Toca em cima de um marco pra abrir os detalhes e a foto.</p>
+
+      <div class="timeline" id="timelineAccordion">${timelineHtml}</div>
+
+      <div class="timeline-presentation" id="timelinePresentation" style="display:none;">
+        <div class="tp-slide" id="tpSlide"></div>
+        <div class="tp-controls">
+          <button class="tp-btn" onclick="prevSlide()" aria-label="Marco anterior">←</button>
+          <span class="tp-counter" id="tpCounter"></span>
+          <button class="tp-btn" onclick="nextSlide()" aria-label="Próximo marco">→</button>
+        </div>
+        <div class="tp-dots" id="tpDots"></div>
+      </div>
+    </section>
+
+    <section class="landmarks-section">
+      <div class="section-label">Onde ir</div>
+      <h2>Uns lugares bacanas pra conhecer em ${b.nome}</h2>
+      <div class="landmarks-grid">${pontosFamososHtml}</div>
+    </section>
+
+    <section class="curiosidades-section">
+      <div class="section-label">Você sabia?</div>
+      <h2>Curiosidades sobre ${b.nome}</h2>
+      <div class="flip-grid">${curiosidadesHtml}</div>
+    </section>
+  `;
+
+  initCompareSlider(b.id);
+}
+
+/* ---------- Interactive timeline (accordion) ---------- */
+function toggleTimelineItem(bairroId, index){
+  const item = document.getElementById(`tl-${bairroId}-${index}`);
+  if(!item) return;
+  const btn = item.querySelector(".timeline-toggle");
+  const isOpen = item.classList.contains("open");
+  item.classList.toggle("open", !isOpen);
+  btn.setAttribute("aria-expanded", String(!isOpen));
+}
+
+/* ---------- Timeline: modo apresentação ---------- */
+function toggleTimelineMode(){
+  const accordion = document.getElementById("timelineAccordion");
+  const presentation = document.getElementById("timelinePresentation");
+  const hint = document.getElementById("timelineHint");
+  const btn = document.getElementById("modeToggle");
+  const emModoApresentacao = presentation.style.display !== "none";
+
+  if(emModoApresentacao){
+    presentation.style.display = "none";
+    accordion.style.display = "block";
+    hint.textContent = "Toca em cima de um marco pra abrir os detalhes e a foto.";
+    btn.textContent = "🎞️ Modo apresentação";
+  } else {
+    accordion.style.display = "none";
+    presentation.style.display = "block";
+    hint.textContent = "Usa as setas (ou o teclado ← →) pra passar de marco em marco.";
+    btn.textContent = "📋 Ver lista completa";
+    currentSlide = 0;
+    renderSlide();
+  }
+}
+
+function renderSlide(){
+  if(!currentBairro) return;
+  const item = currentBairro.timeline[currentSlide];
+  const total = currentBairro.timeline.length;
+
+  document.getElementById("tpSlide").innerHTML = `
+    <div class="tp-year">${item.ano}</div>
+    <h3>${item.titulo}</h3>
+    <div class="tp-photo">
+      <img src="${IMG_BASE}${item.foto}" alt="Foto histórica: ${item.titulo} — ${currentBairro.nome}"
+           onload="this.nextElementSibling.style.display='none'" onerror="this.style.display='none'">
+      <div class="placeholder">
+        <span class="icon">🖼️</span>
+        <span>Espaço para foto</span>
+        <small>${IMG_BASE}${item.foto}</small>
+      </div>
+    </div>
+    <p>${item.texto}</p>
+  `;
+
+  document.getElementById("tpCounter").textContent = `${currentSlide + 1} / ${total}`;
+
+  const dots = currentBairro.timeline.map((_, i) =>
+    `<button class="tp-dot ${i === currentSlide ? 'active' : ''}" onclick="irParaSlide(${i})" aria-label="Ir pro marco ${i+1}"></button>`
+  ).join("");
+  document.getElementById("tpDots").innerHTML = dots;
+}
+
+function nextSlide(){
+  if(!currentBairro) return;
+  currentSlide = (currentSlide + 1) % currentBairro.timeline.length;
+  renderSlide();
+}
+
+function prevSlide(){
+  if(!currentBairro) return;
+  currentSlide = (currentSlide - 1 + currentBairro.timeline.length) % currentBairro.timeline.length;
+  renderSlide();
+}
+
+function irParaSlide(i){
+  currentSlide = i;
+  renderSlide();
+}
+
+document.addEventListener("keydown", (e) => {
+  const presentation = document.getElementById("timelinePresentation");
+  if(!presentation || presentation.style.display === "none") return;
+  if(e.key === "ArrowRight") nextSlide();
+  if(e.key === "ArrowLeft") prevSlide();
+});
+
+/* ---------- Navigation ---------- */
+function esconderTudo(){
+  document.getElementById("overview").classList.add("hidden");
+  document.getElementById("detail").classList.remove("visible");
+  document.getElementById("about").classList.remove("visible");
+  document.getElementById("participe").classList.remove("visible");
+  document.querySelectorAll(".nav-bairros button, .nav-pages button").forEach(btn => btn.classList.remove("active"));
+}
+
+function mostrarBairro(id){
+  const b = bairros.find(x => x.id === id);
+  if(!b) return;
+  renderDetail(b);
+  const firstItem = document.getElementById(`tl-${id}-0`);
+  if(firstItem) firstItem.classList.add("open");
+  esconderTudo();
+  document.getElementById("detail").classList.add("visible");
+  const activeBtn = document.getElementById("nav-" + id);
+  if(activeBtn) activeBtn.classList.add("active");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function mostrarVisaoGeral(){
+  esconderTudo();
+  document.getElementById("overview").classList.remove("hidden");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function mostrarSobre(){
+  esconderTudo();
+  document.getElementById("about").classList.add("visible");
+  document.getElementById("nav-sobre").classList.add("active");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function mostrarParticipe(){
+  esconderTudo();
+  document.getElementById("participe").classList.add("visible");
+  document.getElementById("nav-participe").classList.add("active");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* ---------- Before/After slider ---------- */
+function initCompareSlider(id){
+  const frame = document.getElementById("compareFrame-" + id);
+  if(!frame) return;
+  const afterLayer = frame.querySelector(".compare-after");
+  const handle = frame.querySelector(".compare-handle");
+  let dragging = false;
+
+  function setPosition(clientX){
+    const rect = frame.getBoundingClientRect();
+    let pct = ((clientX - rect.left) / rect.width) * 100;
+    pct = Math.max(0, Math.min(100, pct));
+    afterLayer.style.clipPath = `inset(0 0 0 ${pct}%)`;
+    handle.style.left = pct + "%";
+  }
+
+  handle.addEventListener("mousedown", () => dragging = true);
+  window.addEventListener("mouseup", () => dragging = false);
+  window.addEventListener("mousemove", e => { if(dragging) setPosition(e.clientX); });
+
+  handle.addEventListener("touchstart", () => dragging = true, { passive:true });
+  window.addEventListener("touchend", () => dragging = false);
+  window.addEventListener("touchmove", e => {
+    if(dragging && e.touches[0]) setPosition(e.touches[0].clientX);
+  }, { passive:true });
+
+  frame.addEventListener("click", e => {
+    if(e.target === handle) return;
+    setPosition(e.clientX);
+  });
+}
+
+/* ---------- Theme toggle (in-memory; add localStorage once hosted, if desired) ---------- */
+let darkMode = false;
+document.getElementById("themeToggle").addEventListener("click", () => {
+  darkMode = !darkMode;
+  document.documentElement.setAttribute("data-theme", darkMode ? "dark" : "light");
+  document.getElementById("themeIcon").textContent = darkMode ? "☀️" : "🌘";
+  document.getElementById("themeLabel").textContent = darkMode ? "Modo café" : "Modo sépia";
+});
+
+/* ---------- Init ---------- */
+/* ---------- Favicon placeholder (troca sozinho se o arquivo existir) ---------- */
+(function(){
+  const favPath = "assets/img/favicon.png";
+  const testImg = new Image();
+  testImg.onload = function(){
+    document.getElementById("faviconLink").setAttribute("type", "image/png");
+    document.getElementById("faviconLink").setAttribute("href", favPath);
+  };
+  testImg.onerror = function(){ /* mantém o ícone padrão das 4 bolinhas */ };
+  testImg.src = favPath;
+})();
+
+renderOverview();
+</script>
+</body>
+</html>
